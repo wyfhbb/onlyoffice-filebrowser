@@ -197,16 +197,7 @@ func (i *FileInfo) Checksum(algo string) error {
 }
 
 func (i *FileInfo) RealPath() string {
-	if realPathFs, ok := i.Fs.(interface {
-		RealPath(name string) (fPath string, err error)
-	}); ok {
-		realPath, err := realPathFs.RealPath(i.Path)
-		if err == nil {
-			return realPath
-		}
-	}
-
-	return i.Path
+	return GetRealPath(i.Fs, i.Path)
 }
 
 // TODO: use constants
