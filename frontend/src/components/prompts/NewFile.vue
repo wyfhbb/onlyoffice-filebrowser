@@ -5,14 +5,31 @@
     </div>
 
     <div class="card-content">
+      <span v-if="onlyOffice.url">
+        <div
+          v-for="option in this.typeOptions"
+          class="card filetype-option file-icons"
+          :class="{selected: selectedTypeOption == option, [option.name]: true}"
+          @click="selectedTypeOption = option">
+          <span :data-type=option.dataType :aria-label=option.template>
+            <i class="material-icons"></i>
+            <span class="name">{{option.name}}</span>
+          </span>
+        </div>
+      </span>
       <p>{{ $t("prompts.newFileMessage") }}</p>
-      <input
-        class="input input--block"
-        v-focus
-        type="text"
-        @keyup.enter="submit"
-        v-model.trim="name"
-      />
+      <div class="suffixed-input">
+        <input
+          class="input input--block"
+          v-focus
+          type="text"
+          @keyup.enter="submit"
+          v-model.trim="name"
+        />
+        <div v-if="selectedTypeOption.extension" class="suffix" :class="selectedTypeOption.name">
+          {{selectedTypeOption.extension}}
+        </div>
+      </div>
     </div>
 
     <div class="card-action">
@@ -36,16 +53,58 @@
   </div>
 </template>
 
+<style scoped>
+  .filetype-option {
+    padding: 5px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .filetype-option i {
+    font-size: 3rem;
+  }
+
+  .filetype-option span {
+    display: block;
+  }
+
+  .filetype-option.selected, .filetype-option.selected i {
+    color: white !important;
+  }
+
+  .filetype-option.selected.empty { background: rgba(0,0,0,0.8); }
+  .filetype-option.selected.doc { background: var(--icon-blue); }
+  .filetype-option.selected.sheet { background: var(--icon-green); }
+  .filetype-option.selected.slide { background: var(--icon-orange); }
+  .suffix.doc { background: var(--icon-blue) !important;  }
+  .suffix.sheet { background: var(--icon-green) !important; }
+  .suffix.slide { background: var(--icon-orange) !important; }
+  .suffix { color: white; }
+</style>
+
 <script>
 import { mapGetters } from "vuex";
 import { files as api } from "@/api";
 import url from "@/utils/url";
+import { onlyOffice } from "@/utils/constants";
 
 export default {
   name: "new-file",
   data: function () {
+    const typeOptions = [
+      { name: "empty", extension: "", dataType: "text" },
+      { name: "doc", extension: ".docx", template: "empty.docx" },
+      { name: "sheet", extension: ".xlsx", template: "empty.xlsx" },
+      { name: "slide", extension: ".pptx", template: "empty.pptx" },
+    ];
     return {
       name: "",
+      typeOptions: typeOptions,
+      selectedTypeOption: typeOptions[0],
+      onlyOffice
     };
   },
   computed: {
@@ -63,8 +122,13 @@ export default {
         uri = url.removeLastDir(uri) + "/";
       }
 
-      uri += encodeURIComponent(this.name);
+      const filename = this.name + this.selectedTypeOption.extension;
+      uri += encodeURIComponent(filename);
       uri = uri.replace("//", "/");
+
+      if (this.selectedTypeOption.template) {
+        uri = `${uri}?template=${this.selectedTypeOption.template}`;
+      }
 
       try {
         await api.post(uri);

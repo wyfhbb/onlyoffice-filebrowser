@@ -1,4 +1,4 @@
-import { createURL, fetchURL, removePrefix } from "./utils";
+import { createURL, fetchURL, getQueryParams, removePrefix, removeQueryParams } from "./utils";
 import { baseURL } from "@/utils/constants";
 import store from "@/store";
 import { upload as postTus, useTus } from "./tus";
@@ -94,7 +94,8 @@ export async function post(url, content = "", overwrite = false, onupload) {
 }
 
 async function postResources(url, content = "", overwrite = false, onupload) {
-  url = removePrefix(url);
+  const queryParams = getQueryParams(url);
+  url = removeQueryParams(removePrefix(url));
 
   let bufferContent;
   if (
@@ -108,7 +109,7 @@ async function postResources(url, content = "", overwrite = false, onupload) {
     let request = new XMLHttpRequest();
     request.open(
       "POST",
-      `${baseURL}/api/resources${url}?override=${overwrite}`,
+      createURL(`api/resources${url}`, {...queryParams, "override": overwrite}, false),
       true
     );
     request.setRequestHeader("X-Auth", store.state.jwt);

@@ -17,6 +17,7 @@ import (
 	"github.com/filebrowser/filebrowser/v2/errors"
 	"github.com/filebrowser/filebrowser/v2/files"
 	"github.com/filebrowser/filebrowser/v2/fileutils"
+	"github.com/filebrowser/filebrowser/v2/templates"
 )
 
 var resourceGetHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
@@ -127,7 +128,19 @@ func resourcePostHandler(fileCache FileCache) handleFunc {
 		}
 
 		err = d.Runner.RunHook(func() error {
-			info, writeErr := writeFile(d.user.Fs, r.URL.Path, r.Body)
+			body := r.Body
+
+			// Creating a new file from a template on POST.
+			templateName := r.URL.Query().Get("template")
+			if templateName != "" {
+				template, err := templates.Templates().Open(templateName)
+				if err != nil {
+					return err
+				}
+				body = template
+			}
+
+			info, writeErr := writeFile(d.user.Fs, r.URL.Path, body)
 			if writeErr != nil {
 				return writeErr
 			}

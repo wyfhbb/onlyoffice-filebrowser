@@ -78,3 +78,20 @@ export function createURL(endpoint, params = {}, auth = true) {
 
   return url.toString();
 }
+
+
+export function removeQueryParams(url) {
+  return url.split('?')[0];
+}
+
+export function getQueryParams(url) {
+  var queryString = url.split('?')[1] || '';
+  var queryParams = new URLSearchParams(queryString);
+
+  var queryParamsMap = {};
+  queryParams.forEach(function(value, key) {
+    queryParamsMap[key] = value;
+  });
+
+  return queryParamsMap;
+}

@@ -33,3 +33,31 @@
 .input--green {
   background: #c9f2da;
 }
+
+.suffixed-input {
+  display: flex;
+}
+
+.suffixed-input > .input:has(+ .suffix) {
+  border-radius: .1em 0 0 .1em;
+  border-right: 0;
+}
+
+.suffixed-input > .input + .suffix {
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0 .2em .2em 0;
+  border-left: 0;
+  padding: 0 0.5em;
+  display: grid;
+  align-items: center;
+}
+
+.suffixed-input > .input:hover + .suffix,
+.suffixed-input > .input:focus + .suffix {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.suffixed-input > .input--block + .suffix {
+  margin-bottom: 0.5em;
+}
