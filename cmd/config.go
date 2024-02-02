@@ -51,6 +51,7 @@ func addConfigFlags(flags *pflag.FlagSet) {
 
 	flags.String("onlyoffice.url", "", "onlyoffice integration url")
 	flags.String("onlyoffice.jwtSecret", "", "onlyoffice integration secret")
+	flags.Bool("onlyoffice.fullViewport", false, "use the full viewport for the onlyoffice editor")
 }
 
 //nolint:gocyclo

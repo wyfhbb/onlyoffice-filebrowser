@@ -43,8 +43,9 @@ override the options.`,
 				Files:                 mustGetString(flags, "branding.files"),
 			},
 			OnlyOffice: settings.OnlyOffice{
-				URL:       mustGetString(flags, "onlyoffice.url"),
-				JWTSecret: mustGetString(flags, "onlyoffice.jwtSecret"),
+				URL:          mustGetString(flags, "onlyoffice.url"),
+				JWTSecret:    mustGetString(flags, "onlyoffice.jwtSecret"),
+				FullViewport: mustGetBool(flags, "onlyoffice.fullViewport"),
 			},
 		}
 

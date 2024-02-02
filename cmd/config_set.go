@@ -67,6 +67,8 @@ you want to change. Other options will remain unchanged.`,
 				set.OnlyOffice.URL = mustGetString(flags, flag.Name)
 			case "onlyoffice.jwtSecret":
 				set.OnlyOffice.JWTSecret = mustGetString(flags, flag.Name)
+			case "onlyoffice.fullViewport":
+				set.OnlyOffice.FullViewport = mustGetBool(flags, flag.Name)
 			}
 		})
 

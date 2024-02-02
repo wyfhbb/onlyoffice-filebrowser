@@ -222,6 +222,7 @@
     "onlyOffice": "Only Office Integration",
     "onlyOfficeUrl": "Only Office URL (leave blank to disable)",
     "onlyOfficeJwtSecret": "Only Office JWT Secret (works only with https, leave blank to disable)",
+    "onlyOfficeFullViewport": "Use the full browser viewport for the onlyoffice editor",
     "password": "Password",
     "passwordUpdated": "Password updated!",
     "path": "Path",

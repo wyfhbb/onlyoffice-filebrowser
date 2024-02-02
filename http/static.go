@@ -45,7 +45,7 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		"ResizePreview":         d.server.ResizePreview,
 		"EnableExec":            d.server.EnableExec,
 		"TusSettings":           d.settings.Tus,
-		"OnlyOfficeUrl":         d.settings.OnlyOffice.URL,
+		"OnlyOffice":            d.settings.OnlyOffice.Public(),
 	}
 
 	if d.settings.Branding.Files != "" {

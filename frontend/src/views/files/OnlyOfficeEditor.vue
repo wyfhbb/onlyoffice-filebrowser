@@ -1,10 +1,10 @@
 <template>
-  <div id="editor-container">
-    <header-bar>
+  <div id="editor-container" :class="onlyOffice.fullViewport && 'full-viewport'">
+    <header-bar v-if="!onlyOffice.fullViewport">
       <action icon="close" :label="$t('buttons.close')" @action="close()" />
       <title>{{ req.name }}</title>
     </header-bar>
-    <breadcrumbs base="/files" noLink />
+    <breadcrumbs  v-if="!onlyOffice.fullViewport" base="/files" noLink />
     <errors v-if="error" :errorCode="error.status" />
     <div id="editor">
       <div id="onlyoffice-editor"></div>
@@ -12,10 +12,16 @@
   </div>
 </template>
 
+<style scoped>
+  #editor-container.full-viewport {
+    padding-top: 0;
+  }
+</style>
+
 <script>
 import { mapState } from "vuex";
 import url from "@/utils/url";
-import { onlyOfficeUrl } from "@/utils/constants";
+import { onlyOffice } from "@/utils/constants";
 
 import HeaderBar from "@/components/header/HeaderBar.vue";
 import Action from "@/components/header/Action.vue";
@@ -35,6 +41,7 @@ export default {
     return {
       error: null,
       clientConfig: null,
+      onlyOffice,
     };
   },
   computed: {
@@ -81,7 +88,7 @@ export default {
     this.editor.destroyEditor();
   },
   mounted: function () {
-    const scriptUrl = `${onlyOfficeUrl}/web-apps/apps/api/documents/api.js`;
+    const scriptUrl = `${onlyOffice.url}/web-apps/apps/api/documents/api.js`;
     const onlyofficeScript = document.createElement("script");
     onlyofficeScript.setAttribute("src", scriptUrl);
     document.head.appendChild(onlyofficeScript);
